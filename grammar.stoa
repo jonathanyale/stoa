@@ -1,0 +1,47 @@
+& inlines
+
+= markup: `inlinecode`, |highlight|, ...
+= link/ref: [url], [text | url], [#ref]
+
+& columns
+
+&& (nested) heading and list
+
+= depth 1
+== depth 2
+=== depth 3
+
+&& sidenotes
+
+-- comment
+|| annotation
+!! warning
+
+&& fenced blocks
+
+|> scheme
+(display "hello stoa")
+|>
+
+>>= math
+∑ i = n(n+1)/2
+>>=
+
+& metadata
+:: key  & value
+
+& footnotes
+
+invoke: [#1]
+define:
+#1 text
+
+& continuation rule
+
+= base item
+  continued on same line
+     any indentation preserves flow
+
+= new paragraph with empty line(s)
+
+  starts fresh line within block
