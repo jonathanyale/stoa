@@ -4,7 +4,7 @@ TARGET := ".build"
 default:
    @just -l
 
-# build all programs
+# build the compiler
 build:
    just ttgen
    nim c -d:release -o:{{TARGET}}/html ./src/html.nim
@@ -13,6 +13,7 @@ build:
 fmt:
    ruff format --config ~/.config/ruff.toml ./tools/*.py
    nimpretty --maxLineLen:89 --indent:3 ./src/*.nim
+   prettier -uw --print-width 79  --tab-width 3 ./readme.md
 
 # generate transitions and format
 ttgen:

@@ -1,6 +1,22 @@
 import std/[tables, strutils, strformat, times, sequtils, os, algorithm, parseopt]
 import transitions, templates, types
 
+discard """
+stoac is the compiler from `.stoa` to `.html`.
+
+NOTE: stoac is targeted at my personal blogsite.
+
+stoac processes each stoa file in a single linear pass, line by line, without
+building token trees or ASTs. the core abstraction is the `Lexer`, which is a
+stateful string builder in action.
+
+stoac’s translation pipeline is a strict, single-pass process:
+1. detect column kind via finite state machine
+2. route to the appropriate combinator
+3. parse inlines within the column
+4. append output and continue
+"""
+
 proc escapeHtmlChar(c: char): string =
    case c
    of '<': "&lt;"
@@ -26,8 +42,9 @@ proc getColumnKind(line: string): ColumnKind =
       else: return paragraph
 
 proc parseMarkup(lexer: var Lexer) =
-   var state = "START"
-   var cur = ""
+   var
+      state = "START"
+      cur = ""
    while true:
       let key = (state, lexer.char)
       if key in markupTransitions: state = markupTransitions[key]

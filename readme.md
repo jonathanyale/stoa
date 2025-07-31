@@ -5,9 +5,9 @@ here's my personal [blog](https://jonathanyale.github.io/pages/2025/starting_poi
 
 ## zen of stoa
 
-+ minimalism above all, only 47 lines of grammar.
-+ works anywhere, zero editor-specific feature.
-+ serve for pure & immersive reading & writing.
+-  minimalism above all, only 47 lines of grammar.
+-  works anywhere, zero editor-specific feature.
+-  serve for pure & immersive reading & writing.
 
 ## full gramamr of stoa
 
@@ -60,3 +60,7 @@ define:
 
   starts fresh line within block
 ```
+
+> [!NOTE]
+> the compiler in this repo is targeted at my personal blogsite.
+> you'd better implement your own compiler for personal use.
