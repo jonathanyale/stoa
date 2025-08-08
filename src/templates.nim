@@ -165,7 +165,7 @@ proc buildBlogPostTemplate*(metadata: string, header: string,
       document: string, footnotes: string = ""): string =
    result = HTML_DOCTYPE & HTML_OPEN & HEAD_OPEN & META_CHARSET &
          META_VIEWPORT & CSS_RESET_BLOG & CSS_BASE_BLOG & CSS_BLOG_BLOG &
-         metadata & HEAD_CLOSE & BODY_OPEN  & "<div>" &
+         metadata & HEAD_CLOSE & BODY_OPEN & "<div>" &
          BLOG_POST_OPEN & BLOG_HEADER_OPEN & BACK_LINK_POSTS &
          BLOG_HEADER_CLOSE & header & BLOG_CONTENT_OPEN & document &
          BLOG_CONTENT_CLOSE & footnotes & BLOG_POST_CLOSE & "</div>" &
@@ -177,7 +177,7 @@ proc buildHtmlPage*(title: string, cssLinks: seq[string],
    for css in cssLinks:
       head &= css
    head &= HEAD_CLOSE
-   result = HTML_DOCTYPE & HTML_OPEN & head & BODY_OPEN & 
+   result = HTML_DOCTYPE & HTML_OPEN & head & BODY_OPEN &
          bodyContent & BODY_CLOSE & HTML_CLOSE
 
 proc buildSidebarWithNav*(homeActive: bool = false, tagActive: bool = false,

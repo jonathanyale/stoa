@@ -20,6 +20,11 @@ ttgen:
    pypy ./tools/ttgen.py
    nimpretty --maxLineLen:89 --indent:3 ./src/transitions.nim
 
+# run the compiler over a source dir into an output dir
+run input="stoae" output="blogs":
+   just build
+   {{TARGET}}/html --input={{input}} --output={{output}}
+
 # clean build artifacts
 clean:
    rm -rfd {{TARGET}}/**

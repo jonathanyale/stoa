@@ -19,6 +19,7 @@ stoac’s translation pipeline is a strict, single-pass process:
 
 proc escapeHtmlChar(c: char): string =
    case c
+   of '&': "&amp;"
    of '<': "&lt;"
    of '>': "&gt;"
    else: $c
@@ -51,7 +52,7 @@ proc parseMarkup(lexer: var Lexer) =
       elif state[^1] == 'M': cur &= escapeHtmlChar(lexer.char)
       else: break
       if state in markupFinalStates:
-         lexer.cur &= fmt "<scan class={markupFinalStates[state]}>{cur}</scan>"
+         lexer.cur &= fmt "<span class='{$markupFinalStates[state]}'>{cur}</span>"
          break
       if not lexer.forwardChar: break
 
@@ -64,7 +65,7 @@ proc parseLink(lexer: var Lexer) =
    while lexer.char != ']':
       tmp &= escapeHtmlChar(lexer.char)
       if not lexer.forwardChar: break
-   if tmp[0] == '#':
+   if tmp.len > 0 and tmp[0] == '#':
       var idx = if tmp.len > 1: tmp[1..^1] else: ""
       lexer.cur &= fmt"<a id='ref{idx}' href='#footnote{idx}' class='footnote-ref'>[{idx}]</a>"
       return
@@ -83,8 +84,10 @@ proc parseInlineElements(lexer: var Lexer) =
 
 proc parseContentWithContinuation(lexer: var Lexer, content: string) =
    lexer.line = content.strip
-   lexer.char = lexer.line[lexer.offset]
-   lexer.parseInlineElements
+   lexer.offset = 0
+   if lexer.line.len > 0:
+      lexer.char = lexer.line[lexer.offset]
+      lexer.parseInlineElements
    var appendBr = false
    while true:
       if not lexer.forwardLine: break
@@ -93,8 +96,10 @@ proc parseContentWithContinuation(lexer: var Lexer, content: string) =
          if appendBr: lexer.cur &= "<br/>"
          lexer.cur &= " "
          lexer.line = lexer.line.strip
-         lexer.char = lexer.line[lexer.offset]
-         lexer.parseInlineElements
+         if lexer.line.len > 0:
+            lexer.offset = 0
+            lexer.char = lexer.line[lexer.offset]
+            lexer.parseInlineElements
       else: break
 
 proc parseParagraph(lexer: var Lexer) =
@@ -157,12 +162,12 @@ proc parseCode(lexer: var Lexer) =
    discard lexer.forwardLine
 
 proc parseMath(lexer: var Lexer) =
-   lexer.cur &= "<pre><div class='math'}>"
+   lexer.cur &= "<div class='math'><pre>"
    discard lexer.forwardLine
    while lexer.line.strip != ">>=":
       lexer.cur &= escapeHtml(lexer.line) & "\n"
       if not lexer.forwardLine: break
-   lexer.cur &= fmt"</div></pre>"
+   lexer.cur &= fmt"</pre></div>"
    discard lexer.forwardLine
 
 proc parseMetadata(lexer: var Lexer, res: var Res) =
@@ -393,7 +398,7 @@ proc generateWebPages(archive: ArchiveData, outputDir: string) =
 
 proc generateRssFeed(archive: ArchiveData): string =
    let baseUrl = "https://jonathanyale.github.io"
-   let now = now().format("ddd, dd MMM yyyy HH:mm:ss") & " +0000"
+   let buildDate = now().format("ddd, dd MMM yyyy HH:mm:ss") & " +0000"
 
    var rss = """<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
@@ -404,7 +409,7 @@ proc generateRssFeed(archive: ArchiveData): string =
 <description>Recent content on λboredom's blogsite</description>
 <generator>stoac</generator>
 <language>en</language>
-<lastBuildDate>""" & now & """</lastBuildDate>
+<lastBuildDate>""" & buildDate & """</lastBuildDate>
 """
 
    for card in archive.homeCards:
