@@ -398,10 +398,10 @@ proc generateRssFeed(archive: ArchiveData): string =
    var rss = """<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
 <channel>
-<title>jonathanyale log</title>
+<title>λboredom</title>
 <link>""" & baseUrl &
          """</link>
-<description>Recent content on jonathanyale log</description>
+<description>Recent content on λboredom's blogsite</description>
 <generator>stoac</generator>
 <language>en</language>
 <lastBuildDate>""" & now & """</lastBuildDate>

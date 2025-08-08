@@ -16,7 +16,7 @@ const
    SIDEBAR_SOCIAL* = """
          <div class="sidebar-social">
             <a href="https://github.com/jonathanyale" class="social-link" target="_blank">github</a>
-            <a href="https://www.youtube.com/@deepBoredom" class="social-link" target="_blank">youtube</a>
+            <a href="https://www.youtube.com/@lambdaBoredom" class="social-link" target="_blank">youtube</a>
             <a href="mailto:jonathanyale@pm.me" class="social-link">email</a>
             <a href="feed.xml" class="social-link">feed</a>
          </div>"""
@@ -103,62 +103,6 @@ const
    NAV_TAG_INACTIVE_PARENT* = buildNavItem("Tags", "../tag.html", false)
    NAV_TAG_ACTIVE_PARENT* = buildNavItem("Tags", "../tag.html", true)
 
-   RIDGELINE_PATTERN* = """
-   <div class="pattern-container">
-      <canvas id="ridgelineCanvas"></canvas>
-   </div>
-   <script>
-      document.addEventListener("DOMContentLoaded", function () {
-         const canvas = document.getElementById("ridgelineCanvas");
-         const ctx = canvas.getContext("2d");
-
-         function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            drawRidgelines();
-         }
-
-         function drawRidgelines() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            const ridgeCount = 144;
-            const spacing = canvas.height / (ridgeCount + 1);
-
-            for (let i = 0; i < ridgeCount; i++) {
-               const y = spacing * (i + 1);
-               const opacity = 0.2 + (i / ridgeCount) * 0.3;
-
-               ctx.globalAlpha = opacity;
-               ctx.strokeStyle = "#ffffff";
-               ctx.lineWidth = 1;
-               ctx.beginPath();
-
-               for (let x = 0; x <= canvas.width; x += 2) {
-                  let waveY = y;
-
-                  waveY += 25 * Math.sin(x * 0.004 + i * 0.5);
-                  waveY += 18 * Math.sin(x * 0.009 + i * 0.8);
-                  waveY += 12 * Math.sin(x * 0.021 + i * 1.3);
-                  waveY += 8 * Math.sin(x * 0.043 + i * 2.1);
-                  waveY += 5 * Math.sin(x * 0.089 + i * 3.2);
-                  waveY += 3 * Math.sin(x * 0.167 + i * 4.7);
-
-                  if (x === 0) {
-                     ctx.moveTo(x, waveY);
-                  } else {
-                     ctx.lineTo(x, waveY);
-                  }
-               }
-               ctx.stroke();
-            }
-         }
-
-         window.addEventListener("resize", resizeCanvas);
-         resizeCanvas();
-      });
-   </script>"""
-
-# TODO: check classStr that are not defined in the css
 proc buildTitle*(title: string): string =
    result = "<title>" & title & "</title>"
 
@@ -221,7 +165,7 @@ proc buildBlogPostTemplate*(metadata: string, header: string,
       document: string, footnotes: string = ""): string =
    result = HTML_DOCTYPE & HTML_OPEN & HEAD_OPEN & META_CHARSET &
          META_VIEWPORT & CSS_RESET_BLOG & CSS_BASE_BLOG & CSS_BLOG_BLOG &
-         metadata & HEAD_CLOSE & BODY_OPEN & RIDGELINE_PATTERN & "<div>" &
+         metadata & HEAD_CLOSE & BODY_OPEN  & "<div>" &
          BLOG_POST_OPEN & BLOG_HEADER_OPEN & BACK_LINK_POSTS &
          BLOG_HEADER_CLOSE & header & BLOG_CONTENT_OPEN & document &
          BLOG_CONTENT_CLOSE & footnotes & BLOG_POST_CLOSE & "</div>" &
@@ -233,7 +177,7 @@ proc buildHtmlPage*(title: string, cssLinks: seq[string],
    for css in cssLinks:
       head &= css
    head &= HEAD_CLOSE
-   result = HTML_DOCTYPE & HTML_OPEN & head & BODY_OPEN & RIDGELINE_PATTERN &
+   result = HTML_DOCTYPE & HTML_OPEN & head & BODY_OPEN & 
          bodyContent & BODY_CLOSE & HTML_CLOSE
 
 proc buildSidebarWithNav*(homeActive: bool = false, tagActive: bool = false,
@@ -245,6 +189,6 @@ proc buildSidebarWithNav*(homeActive: bool = false, tagActive: bool = false,
                     elif tagActive: NAV_TAG_ACTIVE
                     elif useParentPaths: NAV_TAG_INACTIVE_PARENT
                     else: NAV_TAG_INACTIVE
-   result = SIDEBAR_OPEN & "<div><h2 class=\"profile-name\">jonathan yalelog</h2></div>" &
+   result = SIDEBAR_OPEN & "<div><h2 class=\"profile-name\">λboredom</h2></div>" &
          SIDEBAR_SOCIAL & SIDEBAR_NAV_OPEN & homeNav & tagNav &
          SIDEBAR_NAV_CLOSE & SIDEBAR_CLOSE
