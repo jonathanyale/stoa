@@ -140,12 +140,12 @@ proc buildTagHeader*(tagName: string, count: int): string =
             "<p>" & $count & " posts in this tag</p>" &
             POSTS_HEADER_CLOSE
 
-proc buildBlogCard*(title: string, preview: string, url: string,
+proc buildBlogCard*(title: string, description: string, url: string,
                     formattedDate: string, tagsHtml: string): string =
    result = "<article class=\"blog-card\">" &
             "<h3><a href=\"" & url & "\" class=\"card-title\">" & title &
                   "</a></h3>" &
-            "<div class=\"card-preview\">" & preview & "</div>" &
+            "<div class=\"card-description\">" & description & "</div>" &
             "<div class=\"card-meta\">" &
             "<span class=\"card-date\">" & formattedDate & "</span>" &
             "<div class=\"card-tags\">" & tagsHtml & "</div>" &

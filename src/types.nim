@@ -5,8 +5,8 @@ type
       metadata*: Table[string, string]
       refs*: Table[string, string]
       document*: string
-      preview*: string
-      previewcount*: int
+      description*: string
+      headingCount*: int
       footnotes*: string
 
    Lexer* = object
@@ -19,7 +19,7 @@ type
 
    BlogCard* = object
       title*: string
-      preview*: string # the first few columns of a blog
+      description*: string
       published*: DateTime
       tags*: seq[string]
       url*: string
@@ -40,8 +40,8 @@ proc zeroed*(res: var Res) =
    res.metadata = initTable[string, string]()
    res.refs = initTable[string, string]()
    res.document = ""
-   res.preview = ""
-   res.previewcount = 0
+   res.description = ""
+   res.headingCount = 0
 
 proc forwardChar*(lexer: var Lexer): bool =
    inc lexer.offset

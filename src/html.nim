@@ -28,9 +28,8 @@ proc escapeHtml(s: string): string = s.mapIt(escapeHtmlChar(it)).join("")
 
 proc appendColumn(lexer: var Lexer, res: var Res, ckind: ColumnKind) =
    res.document &= lexer.cur
-   if res.previewcount <= 7 and ckind != metadata and ckind != footnote:
-      res.preview &= lexer.cur
-      res.previewcount += 1
+   if ckind == heading: inc res.headingCount
+   if res.headingCount == 1: res.description &= lexer.cur
    lexer.cur = ""
 
 proc getColumnKind(line: string): ColumnKind =
@@ -276,7 +275,7 @@ proc extractBlogCard(res: Res, filepath: string, inputDir: string): BlogCard =
    var card = BlogCard()
    card.title = res.metadata.getOrDefault("title", "Untitled")
    card.published = res.metadata.getOrDefault("published", "").parseDateTime
-   card.preview = res.preview
+   card.description = res.description
 
    let relPath = filepath.relativePath(inputDir).replace(".stoa", ".html")
    card.url = "pages/" & relPath
@@ -334,7 +333,7 @@ proc generateBlogCardHtml(card: BlogCard): string =
    let formattedDate = card.published.format("yyyy-MM-dd")
    let tagsHtml = card.tags.mapIt(fmt"<span class='tag'>{it}</span>").join(" ")
 
-   return buildBlogCard(card.title, card.preview, card.url, formattedDate, tagsHtml)
+   return buildBlogCard(card.title, card.description, card.url, formattedDate, tagsHtml)
 
 proc generateIndexHtml(archive: ArchiveData): string =
    let cssLinks = @[CSS_RESET, CSS_BASE, CSS_HOME]
@@ -406,7 +405,7 @@ proc generateRssFeed(archive: ArchiveData): string =
 <title>λboredom</title>
 <link>""" & baseUrl &
          """</link>
-<description>Recent content on λboredom's blogsite</description>
+<description>Recent content on λboredom</description>
 <generator>stoac</generator>
 <language>en</language>
 <lastBuildDate>""" & buildDate & """</lastBuildDate>
@@ -416,18 +415,11 @@ proc generateRssFeed(archive: ArchiveData): string =
       let pubDate = card.published.format("ddd, dd MMM yyyy HH:mm:ss") & " +0000"
       let itemUrl = baseUrl & "/" & card.url
 
-      rss &= """<item>
-<title>""" & escapeHtml(card.title) &
-            """</title>
-<link>""" & itemUrl & """</link>
-<pubDate>""" & pubDate & """</pubDate>
-<guid>""" & itemUrl & """</guid>
-<description>""" & escapeHtml(card.title) & """</description>
-</item>
-"""
+      rss &= "<item><title>" & escapeHtml(card.title) & "</title><link>" & itemUrl &
+            "</link><pubDate>" & pubDate & "</pubDate><guid>" & itemUrl &
+            "</guid><description>" & escapeHtml(card.description) & "</description></item>"
 
-   rss &= """</channel>
-</rss>"""
+   rss &= "</channel></rss>"
 
    return rss
 
