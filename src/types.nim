@@ -1,4 +1,5 @@
 import std/[tables, times]
+import transitions
 
 type
    Res* = object
@@ -16,6 +17,7 @@ type
       char*: char
       line*: string
       lines*: seq[string]
+      lastColumnKind*: ColumnKind
 
    BlogCard* = object
       title*: string
@@ -35,6 +37,7 @@ proc zeroed*(lexer: var Lexer) =
    lexer.char = '\0'
    lexer.line = ""
    lexer.lines = @[]
+   lexer.lastColumnKind = ColumnKind.paragraph
 
 proc zeroed*(res: var Res) =
    res.metadata = initTable[string, string]()

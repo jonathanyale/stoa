@@ -71,7 +71,7 @@ proc parseLink(lexer: var Lexer) =
    let parts = tmp.split(" | ")
    text = parts[0].strip
    link = if parts.len > 1: parts[1].strip else: parts[0].strip
-   lexer.cur &= fmt"<a href='{link}' target=_blank>{text}</a>"
+   lexer.cur &= fmt"<a href='{link}' rel='noopener noreferrer' target=_blank>{text}</a>"
    discard lexer.forwardChar
 
 proc parseInlineElements(lexer: var Lexer) =
@@ -103,6 +103,7 @@ proc parseContentWithContinuation(lexer: var Lexer, content: string) =
 
 proc parseParagraph(lexer: var Lexer) =
    lexer.cur &= "<p>"
+   if lexer.lastColumnKind == list: lexer.cur &= "<br/>"
    while true:
       if lexer.line.isEmptyOrWhitespace: lexer.cur &= "<br/>"
       else: lexer.parseInlineElements
@@ -197,6 +198,7 @@ proc parseColumn(lexer: var Lexer, res: var Res, ckind: ColumnKind) =
    of footnote: lexer.parseFootnote(res)
    else: lexer.parseParagraph
    lexer.appendColumn(res, ckind)
+   lexer.lastColumnKind = ckind
 
 proc parseLine(lexer: var Lexer, res: var Res) =
    var ckind = lexer.line.getColumnKind

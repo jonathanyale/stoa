@@ -15,8 +15,8 @@ const
 
    SIDEBAR_SOCIAL* = """
          <div class="sidebar-social">
-            <a href="https://github.com/jonathanyale" class="social-link" target="_blank">github</a>
-            <a href="https://www.youtube.com/@lambdaBoredom" class="social-link" target="_blank">youtube</a>
+            <a href="https://github.com/jonathanyale" class="social-link" rel="noopener noreferrer" target="_blank">github</a>
+            <a href="https://www.youtube.com/@lambdaBoredom" class="social-link" rel="noopener noreferrer" target="_blank">youtube</a>
             <a href="mailto:jonathanyale@pm.me" class="social-link">email</a>
             <a href="feed.xml" class="social-link">feed</a>
          </div>"""
