@@ -214,7 +214,7 @@ proc parseStoaFile(
    while lexer.lineno < lines.len:
       lexer.parseLine(res)
 
-      # collect footnote content separately
+   # collect footnote content separately
    for idx, content in res.refs:
       res.footnotes &= fmt"<div id='footnote{idx}' class='footnote'><a href='#ref{idx}' class='footnote-ref'>[{idx}]</a> {content}</div>"
 
